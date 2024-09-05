@@ -1,0 +1,72 @@
+<template>
+  <section>
+    <h2>Your Cart</h2>
+    <h3>Total Amount: <base-badge mode="elegant">${{ total }}</base-badge></h3>
+    <ul>
+      <cart-item
+        v-for="item in items"
+        :key="item.productId"
+        :prod-id="item.productId"
+        :title="item.title"
+        :image="item.image"
+        :price="item.price"
+        :qty="item.qty"
+      ></cart-item>
+    </ul>
+  </section>
+</template>
+
+<script>
+import CartItem from '../components/cart/CartItem.vue';
+
+export default {
+  inject: ['cart'],
+  components: {
+    CartItem,
+  },
+  computed: {
+    cartTotal() {
+      return this.cart.total.toFixed(2);
+    }
+  }
+};
+</script>
+
+<script setup>
+import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
+import { cartStore } from '../stores/cart';
+
+// Initialize the store and extract the needed refs
+const store = cartStore();
+const { cartItems, cartTotal } = storeToRefs(store);
+
+// Make the products available to the template
+// const products = getProducts;
+const items = computed(() => cartItems.value);
+const total = computed(() => cartTotal.value);
+</script>
+
+<style scoped>
+section {
+  margin: 2rem auto;
+  max-width: 40rem;
+}
+
+h2 {
+  color: #292929;
+  text-align: center;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 1rem;
+}
+
+h3 {
+ text-align: center;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+</style>
